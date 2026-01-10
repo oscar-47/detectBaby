@@ -1,0 +1,326 @@
+/* pages/unlock/unlock.wxss */
+
+.unlock-page {
+  min-height: 100vh;
+  padding: 32rpx;
+  padding-bottom: 240rpx;
+  background: linear-gradient(180deg, #f8f9ff 0%, #f5f7fa 100%);
+}
+
+/* ===== 头部区域 ===== */
+.header-section {
+  text-align: center;
+  padding: 40rpx 0;
+}
+
+.action-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 24rpx;
+  border-radius: 40rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  margin-bottom: 20rpx;
+}
+
+.action-badge.gen {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  color: var(--primary-color);
+}
+
+.action-badge.original {
+  background: linear-gradient(135deg, rgba(79, 172, 254, 0.15) 0%, rgba(0, 242, 254, 0.15) 100%);
+  color: #4facfe;
+}
+
+.action-badge image {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.header-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12rpx;
+}
+
+.header-subtitle {
+  font-size: 28rpx;
+}
+
+/* ===== 解锁选项卡片 ===== */
+.unlock-options {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  margin-bottom: 40rpx;
+}
+
+.unlock-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  border: 3rpx solid transparent;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  display: flex;
+  gap: 24rpx;
+}
+
+.unlock-card:active {
+  transform: scale(0.99);
+}
+
+.unlock-card.selected {
+  border-color: var(--primary-color);
+  box-shadow: 0 8rpx 30rpx rgba(102, 126, 234, 0.2);
+}
+
+.unlock-card.selected.ad-card {
+  border-color: var(--success-color);
+  box-shadow: 0 8rpx 30rpx rgba(0, 200, 83, 0.2);
+}
+
+/* 卡片图标 */
+.card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.card-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-icon image {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.ad-icon {
+  background: linear-gradient(135deg, #00c853 0%, #00e676 100%);
+}
+
+.pay-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card-badge {
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 20rpx;
+  font-weight: 500;
+}
+
+.card-badge.free {
+  background: rgba(0, 200, 83, 0.15);
+  color: var(--success-color);
+}
+
+.card-badge.premium {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+}
+
+/* 卡片内容 */
+.card-content {
+  flex: 1;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+}
+
+.card-desc {
+  font-size: 26rpx;
+  margin-bottom: 16rpx;
+}
+
+.card-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.tip-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.tip-item image {
+  width: 28rpx;
+  height: 28rpx;
+}
+
+.tip-item.highlight {
+  color: var(--primary-color);
+}
+
+.tip-item.warning {
+  color: var(--warning-color);
+}
+
+/* 价格 */
+.price {
+  display: flex;
+  align-items: baseline;
+  color: var(--error-color);
+}
+
+.price-currency {
+  font-size: 24rpx;
+}
+
+.price-value {
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+/* 单选框 */
+.card-radio {
+  display: flex;
+  align-items: center;
+}
+
+.radio-circle {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  border: 3rpx solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.radio-circle.checked {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+}
+
+.ad-card .radio-circle.checked {
+  border-color: var(--success-color);
+  background: var(--success-color);
+}
+
+.radio-inner {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+/* ===== 权益对比 ===== */
+.compare-section {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.compare-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 24rpx;
+  text-align: center;
+}
+
+.compare-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.compare-row {
+  display: flex;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.compare-row:last-child {
+  border-bottom: none;
+}
+
+.compare-row.header {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.compare-cell {
+  flex: 1;
+  padding: 20rpx 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rpx;
+  font-size: 24rpx;
+}
+
+.compare-cell.label {
+  justify-content: flex-start;
+  color: var(--text-secondary);
+}
+
+.compare-cell.highlight {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.compare-cell image {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+/* ===== 底部操作 ===== */
+.bottom-action {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 24rpx 32rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background: #ffffff;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+
+.btn-content.loading .loading-spinner {
+  width: 36rpx;
+  height: 36rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.bottom-tips {
+  text-align: center;
+  margin-top: 16rpx;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

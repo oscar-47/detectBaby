@@ -1,0 +1,108 @@
+<!--pages/settings/settings.wxml-->
+<view class="settings-page">
+  <!-- 用户信息区域 -->
+  <view class="user-section">
+    <view class="user-avatar">
+      <image src="{{userInfo.avatarUrl || '/images/icons/avatar-default.png'}}" mode="aspectFill"></image>
+    </view>
+    <view class="user-info">
+      <view class="user-name">{{userInfo.nickName || '微信用户'}}</view>
+      <view class="user-id text-muted font-sm">ID: {{openid ? openid.substring(0, 8) + '...' : '获取中'}}</view>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="settings-group">
+    <view class="group-title">关于</view>
+    <view class="settings-list">
+      <view class="settings-item" bindtap="onOpenAgreement" data-type="user">
+        <view class="item-icon">
+          <image src="/images/icons/document.png" mode="aspectFit"></image>
+        </view>
+        <view class="item-content">
+          <text>用户协议</text>
+        </view>
+        <view class="item-arrow">
+          <image src="/images/icons/arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <view class="settings-item" bindtap="onOpenAgreement" data-type="privacy">
+        <view class="item-icon">
+          <image src="/images/icons/shield.png" mode="aspectFit"></image>
+        </view>
+        <view class="item-content">
+          <text>隐私政策</text>
+        </view>
+        <view class="item-arrow">
+          <image src="/images/icons/arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <view class="settings-item" bindtap="onOpenAgreement" data-type="disclaimer">
+        <view class="item-icon">
+          <image src="/images/icons/info.png" mode="aspectFit"></image>
+        </view>
+        <view class="item-content">
+          <text>免责声明</text>
+        </view>
+        <view class="item-arrow">
+          <image src="/images/icons/arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="settings-group">
+    <view class="group-title">支持</view>
+    <view class="settings-list">
+      <button class="settings-item" open-type="contact">
+        <view class="item-icon">
+          <image src="/images/icons/headset.png" mode="aspectFit"></image>
+        </view>
+        <view class="item-content">
+          <text>联系客服</text>
+        </view>
+        <view class="item-arrow">
+          <image src="/images/icons/arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </button>
+
+      <button class="settings-item" open-type="feedback">
+        <view class="item-icon">
+          <image src="/images/icons/feedback.png" mode="aspectFit"></image>
+        </view>
+        <view class="item-content">
+          <text>意见反馈</text>
+        </view>
+        <view class="item-arrow">
+          <image src="/images/icons/arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </button>
+    </view>
+  </view>
+
+  <view class="settings-group">
+    <view class="group-title">数据管理</view>
+    <view class="settings-list">
+      <view class="settings-item danger" bindtap="onDeleteData">
+        <view class="item-icon">
+          <image src="/images/icons/trash.png" mode="aspectFit"></image>
+        </view>
+        <view class="item-content">
+          <text>删除所有数据</text>
+          <view class="item-desc text-muted font-sm">将清除所有上传和生成记录</view>
+        </view>
+        <view class="item-arrow">
+          <image src="/images/icons/arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 版本信息 -->
+  <view class="version-info">
+    <view class="version-text text-muted">版本 1.0.0</view>
+    <view class="copyright text-muted font-xs">本服务仅供娱乐，非医疗用途</view>
+  </view>
+</view>

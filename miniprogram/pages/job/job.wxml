@@ -1,0 +1,83 @@
+<!--pages/job/job.wxml-->
+<view class="job-page">
+  <!-- 生成中状态 -->
+  <view class="job-content generating" wx:if="{{status === 'generating'}}">
+    <view class="generate-animation">
+      <view class="baby-container">
+        <view class="glow-ring"></view>
+        <view class="glow-ring delay"></view>
+        <view class="baby-icon-wrapper">
+          <image class="baby-icon" src="/images/icons/baby-face.png" mode="aspectFit"></image>
+        </view>
+      </view>
+      <view class="magic-particles">
+        <view class="particle" wx:for="{{8}}" wx:key="*this" style="--i: {{index}}"></view>
+      </view>
+    </view>
+    
+    <view class="generate-info">
+      <view class="generate-title">正在生成宝宝照...</view>
+      <view class="generate-subtitle text-muted">AI正在努力创作中，预计20秒内完成</view>
+      
+      <view class="progress-section">
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: {{progress}}%"></view>
+        </view>
+        <view class="progress-text">{{progress}}%</view>
+      </view>
+
+      <view class="status-steps">
+        <view class="status-step {{currentStep >= 1 ? 'active' : ''}} {{currentStep > 1 ? 'done' : ''}}">
+          <view class="step-indicator">{{currentStep > 1 ? '✓' : '1'}}</view>
+          <text>任务已创建</text>
+        </view>
+        <view class="status-step {{currentStep >= 2 ? 'active' : ''}} {{currentStep > 2 ? 'done' : ''}}">
+          <view class="step-indicator">{{currentStep > 2 ? '✓' : '2'}}</view>
+          <text>AI分析中</text>
+        </view>
+        <view class="status-step {{currentStep >= 3 ? 'active' : ''}} {{currentStep > 3 ? 'done' : ''}}">
+          <view class="step-indicator">{{currentStep > 3 ? '✓' : '3'}}</view>
+          <text>图像生成中</text>
+        </view>
+        <view class="status-step {{currentStep >= 4 ? 'active' : ''}}">
+          <view class="step-indicator">4</view>
+          <text>安全审核</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="tips-card">
+      <view class="tips-icon">💡</view>
+      <view class="tips-text">生成过程中请勿离开页面，完成后将自动跳转</view>
+    </view>
+  </view>
+
+  <!-- 生成成功 -->
+  <view class="job-content success" wx:if="{{status === 'succeeded'}}">
+    <view class="success-animation">
+      <view class="success-icon-wrapper">
+        <image class="success-icon" src="/images/icons/check-success.png" mode="aspectFit"></image>
+      </view>
+    </view>
+    <view class="success-title">生成成功！</view>
+    <view class="success-subtitle text-muted">正在跳转到结果页面...</view>
+  </view>
+
+  <!-- 生成失败 -->
+  <view class="job-content failed" wx:if="{{status === 'failed'}}">
+    <view class="fail-icon-wrapper">
+      <image class="fail-icon" src="/images/icons/close-error.png" mode="aspectFit"></image>
+    </view>
+    <view class="fail-title">生成失败</view>
+    <view class="fail-subtitle text-muted">{{errorMessage || '生成过程中出现问题'}}</view>
+    
+    <view class="fail-actions">
+      <button class="btn btn-primary btn-lg btn-block" bindtap="onRetry">
+        重新生成
+      </button>
+      <button class="btn btn-secondary btn-lg btn-block" bindtap="onBackHome">
+        返回首页
+      </button>
+    </view>
+  </view>
+</view>

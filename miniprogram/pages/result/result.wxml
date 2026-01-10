@@ -1,0 +1,104 @@
+<!--pages/result/result.wxml-->
+<view class="result-page">
+  <!-- 顶部成功提示 -->
+  <view class="success-banner animate-fadeIn">
+    <image class="banner-icon" src="/images/icons/sparkle.png" mode="aspectFit"></image>
+    <text>生成完成</text>
+  </view>
+
+  <!-- 主图展示 -->
+  <view class="image-section animate-fadeIn" style="animation-delay: 0.1s;">
+    <view class="image-container" bindtap="onPreviewImage">
+      <image class="result-image" 
+             src="{{viewImageUrl}}" 
+             mode="aspectFit"
+             show-menu-by-longpress="{{true}}"></image>
+      <view class="image-overlay" wx:if="{{!viewImageUrl}}">
+        <view class="loading-placeholder">
+          <view class="loading-spinner"></view>
+          <text>加载中...</text>
+        </view>
+      </view>
+      <view class="zoom-hint">
+        <image src="/images/icons/zoom.png" mode="aspectFit"></image>
+        <text>点击放大</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作区域 -->
+  <view class="action-section animate-fadeIn" style="animation-delay: 0.2s;">
+    <!-- 保存到相册 -->
+    <view class="action-card" bindtap="onSaveToAlbum">
+      <view class="action-icon save-icon">
+        <image src="/images/icons/download-album.png" mode="aspectFit"></image>
+      </view>
+      <view class="action-content">
+        <view class="action-title">保存到相册</view>
+        <view class="action-desc text-muted">保存展示图到手机相册</view>
+      </view>
+      <view class="action-arrow">
+        <image src="/images/icons/arrow-right.png" mode="aspectFit"></image>
+      </view>
+    </view>
+
+    <!-- 原图下载 -->
+    <view class="action-card {{originalAccess === 'locked' ? 'locked' : ''}}" bindtap="onDownloadOriginal">
+      <view class="action-icon original-icon">
+        <image src="/images/icons/hd.png" mode="aspectFit"></image>
+      </view>
+      <view class="action-content">
+        <view class="action-title">
+          <text>下载原图</text>
+          <view class="badge badge-success" wx:if="{{originalAccess === 'included' || originalAccess === 'unlocked'}}">已解锁</view>
+          <view class="badge badge-warning" wx:if="{{originalAccess === 'locked'}}">需解锁</view>
+        </view>
+        <view class="action-desc text-muted">
+          <text wx:if="{{originalAccess === 'locked'}}">观看广告或付费¥9.9解锁</text>
+          <text wx:else>高清无压缩原图</text>
+        </view>
+      </view>
+      <view class="action-arrow">
+        <image src="/images/icons/arrow-right.png" mode="aspectFit"></image>
+      </view>
+    </view>
+
+    <!-- 分享 -->
+    <button class="action-card share-btn" open-type="share">
+      <view class="action-icon share-icon">
+        <image src="/images/icons/share.png" mode="aspectFit"></image>
+      </view>
+      <view class="action-content">
+        <view class="action-title">分享给好友</view>
+        <view class="action-desc text-muted">分享宝宝照给亲朋好友</view>
+      </view>
+      <view class="action-arrow">
+        <image src="/images/icons/arrow-right.png" mode="aspectFit"></image>
+      </view>
+    </button>
+  </view>
+
+  <!-- 再次生成 -->
+  <view class="regenerate-section animate-fadeIn" style="animation-delay: 0.3s;">
+    <button class="btn btn-secondary btn-lg btn-block" bindtap="onRegenerate">
+      <image class="btn-icon" src="/images/icons/refresh.png" mode="aspectFit"></image>
+      <text>再生成一张</text>
+    </button>
+    <view class="regenerate-tips text-muted font-sm">
+      使用同一张B超图重新生成
+    </view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="footer-tips animate-fadeIn" style="animation-delay: 0.4s;">
+    <view class="tips-item">
+      <image src="/images/icons/clock.png" mode="aspectFit"></image>
+      <text>生成记录保留30天</text>
+    </view>
+    <view class="tips-divider">•</view>
+    <view class="tips-item" bindtap="onGoHistory">
+      <image src="/images/icons/history.png" mode="aspectFit"></image>
+      <text>查看历史记录</text>
+    </view>
+  </view>
+</view>

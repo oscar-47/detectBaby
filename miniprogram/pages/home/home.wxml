@@ -1,0 +1,102 @@
+<!--pages/home/home.wxml-->
+<view class="home-page">
+  <!-- 顶部Banner区域 -->
+  <view class="hero-section">
+    <view class="hero-bg"></view>
+    <view class="hero-content">
+      <view class="hero-title">宝宝照AI生成</view>
+      <view class="hero-subtitle">上传B超图，AI生成写实宝宝照片</view>
+      <view class="hero-badge">
+        <view class="badge badge-primary">写实风格</view>
+        <view class="badge badge-success">快速出图</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 立即生成按钮 -->
+  <view class="action-section">
+    <button class="btn btn-primary btn-lg btn-block generate-btn" bindtap="onStartGenerate">
+      <image class="btn-icon" src="/images/icons/camera.png" mode="aspectFit"></image>
+      <text>立即生成宝宝照</text>
+    </button>
+    <view class="action-tips">
+      <text class="text-muted font-sm">支持激励广告免费体验或付费¥9.9/次</text>
+    </view>
+  </view>
+
+  <!-- 参考图瀑布流 -->
+  <view class="gallery-section">
+    <view class="section-header">
+      <view class="section-title">参考效果</view>
+      <view class="section-subtitle text-muted font-sm">看看其他宝宝的写实生成效果</view>
+    </view>
+    
+    <view class="waterfall-container" wx:if="{{galleryItems.length > 0}}">
+      <view class="waterfall-column">
+        <view class="waterfall-item" 
+              wx:for="{{leftColumn}}" 
+              wx:key="id"
+              bindtap="onPreviewImage"
+              data-url="{{item.cover_url}}">
+          <image class="waterfall-image" 
+                 src="{{item.cover_url}}" 
+                 mode="widthFix"
+                 lazy-load="true"></image>
+          <view class="waterfall-tags" wx:if="{{item.tags && item.tags.length > 0}}">
+            <view class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="waterfall-column">
+        <view class="waterfall-item" 
+              wx:for="{{rightColumn}}" 
+              wx:key="id"
+              bindtap="onPreviewImage"
+              data-url="{{item.cover_url}}">
+          <image class="waterfall-image" 
+                 src="{{item.cover_url}}" 
+                 mode="widthFix"
+                 lazy-load="true"></image>
+          <view class="waterfall-tags" wx:if="{{item.tags && item.tags.length > 0}}">
+            <view class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <view class="skeleton-grid">
+        <view class="skeleton skeleton-card"></view>
+        <view class="skeleton skeleton-card"></view>
+        <view class="skeleton skeleton-card"></view>
+        <view class="skeleton skeleton-card"></view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && galleryItems.length === 0}}">
+      <image class="empty-state-icon" src="/images/icons/empty.png" mode="aspectFit"></image>
+      <view class="empty-state-text">暂无参考图</view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{hasMore && !loading}}" bindtap="loadMoreGallery">
+      <text>加载更多</text>
+    </view>
+  </view>
+
+  <!-- 底部合规入口 -->
+  <view class="footer-section">
+    <view class="footer-links">
+      <text class="footer-link" bindtap="onOpenAgreement" data-type="user">用户协议</text>
+      <text class="footer-divider">|</text>
+      <text class="footer-link" bindtap="onOpenAgreement" data-type="privacy">隐私政策</text>
+      <text class="footer-divider">|</text>
+      <text class="footer-link" bindtap="onOpenAgreement" data-type="disclaimer">免责声明</text>
+    </view>
+    <view class="footer-notice text-muted font-xs">
+      本服务仅供娱乐，非医疗用途
+    </view>
+  </view>
+</view>

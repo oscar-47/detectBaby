@@ -1,0 +1,143 @@
+<!--pages/unlock/unlock.wxml-->
+<view class="unlock-page">
+  <!-- 头部信息 -->
+  <view class="header-section">
+    <view class="action-badge {{action === 'GEN' ? 'gen' : 'original'}}">
+      <image src="/images/icons/{{action === 'GEN' ? 'magic' : 'download'}}.png" mode="aspectFit"></image>
+      <text>{{action === 'GEN' ? '生成宝宝照' : '下载原图'}}</text>
+    </view>
+    <view class="header-title">选择解锁方式</view>
+    <view class="header-subtitle text-muted">任选一种方式即可{{action === 'GEN' ? '开始生成' : '下载原图'}}</view>
+  </view>
+
+  <!-- 解锁选项 -->
+  <view class="unlock-options">
+    <!-- 激励广告选项 -->
+    <view class="unlock-card ad-card {{selectedMethod === 'ad' ? 'selected' : ''}}" 
+          bindtap="onSelectMethod" 
+          data-method="ad">
+      <view class="card-header">
+        <view class="card-icon ad-icon">
+          <image src="/images/icons/play-video.png" mode="aspectFit"></image>
+        </view>
+        <view class="card-badge free">免费</view>
+      </view>
+      <view class="card-content">
+        <view class="card-title">观看激励视频</view>
+        <view class="card-desc text-muted">观看1次短视频广告即可免费体验</view>
+        <view class="card-tips">
+          <view class="tip-item">
+            <image src="/images/icons/check-small.png" mode="aspectFit"></image>
+            <text>免费体验</text>
+          </view>
+          <view class="tip-item warning" wx:if="{{action === 'GEN'}}">
+            <image src="/images/icons/info-small.png" mode="aspectFit"></image>
+            <text>原图需单独解锁</text>
+          </view>
+        </view>
+      </view>
+      <view class="card-radio">
+        <view class="radio-circle {{selectedMethod === 'ad' ? 'checked' : ''}}">
+          <view class="radio-inner" wx:if="{{selectedMethod === 'ad'}}"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 付费选项 -->
+    <view class="unlock-card pay-card {{selectedMethod === 'pay' ? 'selected' : ''}}" 
+          bindtap="onSelectMethod" 
+          data-method="pay">
+      <view class="card-header">
+        <view class="card-icon pay-icon">
+          <image src="/images/icons/crown.png" mode="aspectFit"></image>
+        </view>
+        <view class="card-badge premium">推荐</view>
+      </view>
+      <view class="card-content">
+        <view class="card-title">
+          <text>付费解锁</text>
+          <view class="price">
+            <text class="price-currency">¥</text>
+            <text class="price-value">9.9</text>
+          </view>
+        </view>
+        <view class="card-desc text-muted">一次付费，畅享完整体验</view>
+        <view class="card-tips">
+          <view class="tip-item highlight">
+            <image src="/images/icons/check-small.png" mode="aspectFit"></image>
+            <text>无广告打扰</text>
+          </view>
+          <view class="tip-item highlight" wx:if="{{action === 'GEN'}}">
+            <image src="/images/icons/gift.png" mode="aspectFit"></image>
+            <text>包含原图下载权限</text>
+          </view>
+        </view>
+      </view>
+      <view class="card-radio">
+        <view class="radio-circle {{selectedMethod === 'pay' ? 'checked' : ''}}">
+          <view class="radio-inner" wx:if="{{selectedMethod === 'pay'}}"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 权益对比 -->
+  <view class="compare-section">
+    <view class="compare-title">权益对比</view>
+    <view class="compare-table">
+      <view class="compare-row header">
+        <view class="compare-cell label"></view>
+        <view class="compare-cell">广告解锁</view>
+        <view class="compare-cell highlight">付费解锁</view>
+      </view>
+      <view class="compare-row">
+        <view class="compare-cell label">生成宝宝照</view>
+        <view class="compare-cell">
+          <image src="/images/icons/check-green.png" mode="aspectFit"></image>
+        </view>
+        <view class="compare-cell highlight">
+          <image src="/images/icons/check-green.png" mode="aspectFit"></image>
+        </view>
+      </view>
+      <view class="compare-row">
+        <view class="compare-cell label">保存展示图</view>
+        <view class="compare-cell">
+          <image src="/images/icons/check-green.png" mode="aspectFit"></image>
+        </view>
+        <view class="compare-cell highlight">
+          <image src="/images/icons/check-green.png" mode="aspectFit"></image>
+        </view>
+      </view>
+      <view class="compare-row">
+        <view class="compare-cell label">下载原图</view>
+        <view class="compare-cell">
+          <text class="text-muted">需单独解锁</text>
+        </view>
+        <view class="compare-cell highlight">
+          <image src="/images/icons/check-green.png" mode="aspectFit"></image>
+          <text class="text-success font-xs">包含</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="bottom-action">
+    <button class="btn btn-lg btn-block {{selectedMethod === 'pay' ? 'btn-primary' : 'btn-success'}}"
+            bindtap="onConfirm"
+            disabled="{{!selectedMethod || processing}}">
+      <view class="btn-content" wx:if="{{!processing}}">
+        <text wx:if="{{selectedMethod === 'ad'}}">观看广告，免费解锁</text>
+        <text wx:elif="{{selectedMethod === 'pay'}}">立即支付 ¥9.9</text>
+        <text wx:else>请选择解锁方式</text>
+      </view>
+      <view class="btn-content loading" wx:else>
+        <view class="loading-spinner"></view>
+        <text>处理中...</text>
+      </view>
+    </button>
+    <view class="bottom-tips text-muted font-xs">
+      {{selectedMethod === 'pay' ? '支付成功后立即生效' : '广告播放完成后自动解锁'}}
+    </view>
+  </view>
+</view>

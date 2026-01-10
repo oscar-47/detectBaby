@@ -1,0 +1,97 @@
+<!--pages/upload/upload.wxml-->
+<view class="upload-page">
+  <!-- 顶部提示 -->
+  <view class="tips-card card card-elevated animate-fadeIn">
+    <view class="tips-header">
+      <image class="tips-icon" src="/images/icons/info.png" mode="aspectFit"></image>
+      <text class="tips-title">上传须知</text>
+    </view>
+    <view class="tips-list">
+      <view class="tips-item">
+        <view class="tips-dot"></view>
+        <text>请上传清晰的婴儿B超图片</text>
+      </view>
+      <view class="tips-item">
+        <view class="tips-dot warning"></view>
+        <text>请遮挡或裁剪掉姓名、医院、条码等敏感信息</text>
+      </view>
+      <view class="tips-item">
+        <view class="tips-dot"></view>
+        <text>支持JPG、PNG格式，建议大小不超过10MB</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 上传区域 -->
+  <view class="upload-area-container animate-fadeIn" style="animation-delay: 0.1s;">
+    <view class="upload-area {{selectedImage ? 'has-image' : ''}}" 
+          bindtap="onChooseImage">
+      
+      <!-- 未选择图片状态 -->
+      <view class="upload-placeholder" wx:if="{{!selectedImage}}">
+        <view class="upload-icon-wrapper">
+          <image class="upload-icon" src="/images/icons/upload.png" mode="aspectFit"></image>
+        </view>
+        <view class="upload-text">点击选择B超图片</view>
+        <view class="upload-subtext text-muted">从相册选择或拍照</view>
+      </view>
+
+      <!-- 已选择图片状态 -->
+      <view class="preview-container" wx:if="{{selectedImage}}">
+        <image class="preview-image" 
+               src="{{selectedImage}}" 
+               mode="aspectFit"></image>
+        <view class="preview-overlay">
+          <view class="preview-actions">
+            <view class="preview-action" catchtap="onChangeImage">
+              <image src="/images/icons/refresh.png" mode="aspectFit"></image>
+              <text>更换</text>
+            </view>
+            <view class="preview-action" catchtap="onCropImage">
+              <image src="/images/icons/crop.png" mode="aspectFit"></image>
+              <text>裁剪</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 示例提示 -->
+  <view class="example-section animate-fadeIn" style="animation-delay: 0.2s;">
+    <view class="section-title">
+      <text>示例参考</text>
+    </view>
+    <view class="example-grid">
+      <view class="example-item correct">
+        <image class="example-image" src="/images/examples/correct.png" mode="aspectFill"></image>
+        <view class="example-badge success">
+          <image src="/images/icons/check.png" mode="aspectFit"></image>
+          <text>清晰无敏感信息</text>
+        </view>
+      </view>
+      <view class="example-item wrong">
+        <image class="example-image" src="/images/examples/wrong.png" mode="aspectFill"></image>
+        <view class="example-badge error">
+          <image src="/images/icons/close.png" mode="aspectFit"></image>
+          <text>含姓名/医院信息</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="bottom-action">
+    <button class="btn btn-primary btn-lg btn-block {{!selectedImage || uploading ? 'btn-disabled' : ''}}"
+            disabled="{{!selectedImage || uploading}}"
+            bindtap="onStartUpload">
+      <view class="btn-content" wx:if="{{!uploading}}">
+        <text>开始校验</text>
+      </view>
+      <view class="btn-content loading" wx:else>
+        <view class="loading-spinner"></view>
+        <text>上传中 {{uploadProgress}}%</text>
+      </view>
+    </button>
+  </view>
+</view>

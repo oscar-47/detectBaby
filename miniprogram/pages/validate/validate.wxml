@@ -1,0 +1,110 @@
+<!--pages/validate/validate.wxml-->
+<view class="validate-page">
+  <!-- 校验中状态 -->
+  <view class="validate-content" wx:if="{{status === 'validating'}}">
+    <view class="validate-animation">
+      <view class="scan-container">
+        <image class="scan-image" src="{{previewImage}}" mode="aspectFit"></image>
+        <view class="scan-line"></view>
+        <view class="scan-corners">
+          <view class="corner top-left"></view>
+          <view class="corner top-right"></view>
+          <view class="corner bottom-left"></view>
+          <view class="corner bottom-right"></view>
+        </view>
+      </view>
+    </view>
+    <view class="validate-info">
+      <view class="validate-title">正在校验B超图片</view>
+      <view class="validate-steps">
+        <view class="step {{currentStep >= 1 ? 'active' : ''}} {{currentStep > 1 ? 'done' : ''}}">
+          <view class="step-icon">
+            <image wx:if="{{currentStep > 1}}" src="/images/icons/check-circle.png" mode="aspectFit"></image>
+            <view wx:else class="step-dot"></view>
+          </view>
+          <text>图片格式检测</text>
+        </view>
+        <view class="step {{currentStep >= 2 ? 'active' : ''}} {{currentStep > 2 ? 'done' : ''}}">
+          <view class="step-icon">
+            <image wx:if="{{currentStep > 2}}" src="/images/icons/check-circle.png" mode="aspectFit"></image>
+            <view wx:else class="step-dot"></view>
+          </view>
+          <text>B超特征识别</text>
+        </view>
+        <view class="step {{currentStep >= 3 ? 'active' : ''}} {{currentStep > 3 ? 'done' : ''}}">
+          <view class="step-icon">
+            <image wx:if="{{currentStep > 3}}" src="/images/icons/check-circle.png" mode="aspectFit"></image>
+            <view wx:else class="step-dot"></view>
+          </view>
+          <text>敏感信息检测</text>
+        </view>
+        <view class="step {{currentStep >= 4 ? 'active' : ''}}">
+          <view class="step-icon">
+            <view class="step-dot"></view>
+          </view>
+          <text>清晰度评估</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 校验成功 -->
+  <view class="result-content success" wx:if="{{status === 'pass'}}">
+    <view class="result-icon-wrapper success-bg">
+      <image class="result-icon" src="/images/icons/check-success.png" mode="aspectFit"></image>
+    </view>
+    <view class="result-title">校验通过</view>
+    <view class="result-subtitle text-muted">您的B超图片符合要求，可以开始生成</view>
+    
+    <view class="score-card card">
+      <view class="score-item">
+        <text class="score-label">B超识别</text>
+        <view class="score-bar">
+          <view class="score-fill" style="width: {{scores.ultrasound * 100}}%"></view>
+        </view>
+        <text class="score-value">{{(scores.ultrasound * 100).toFixed(0)}}%</text>
+      </view>
+      <view class="score-item">
+        <text class="score-label">清晰度</text>
+        <view class="score-bar">
+          <view class="score-fill" style="width: {{scores.clarity * 100}}%"></view>
+        </view>
+        <text class="score-value">{{(scores.clarity * 100).toFixed(0)}}%</text>
+      </view>
+    </view>
+
+    <button class="btn btn-primary btn-lg btn-block" bindtap="onContinue">
+      继续，选择解锁方式
+    </button>
+  </view>
+
+  <!-- 校验失败 -->
+  <view class="result-content fail" wx:if="{{status === 'fail'}}">
+    <view class="result-icon-wrapper fail-bg">
+      <image class="result-icon" src="/images/icons/close-error.png" mode="aspectFit"></image>
+    </view>
+    <view class="result-title">校验未通过</view>
+    <view class="result-subtitle text-muted">{{failMessage}}</view>
+    
+    <view class="fail-reasons card">
+      <view class="fail-reason" wx:for="{{reasonCodes}}" wx:key="*this">
+        <image class="reason-icon" src="/images/icons/warning.png" mode="aspectFit"></image>
+        <view class="reason-content">
+          <view class="reason-title">{{reasonTexts[item].title}}</view>
+          <view class="reason-desc text-muted">{{reasonTexts[item].desc}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="fail-tips">
+      <text class="tips-title">建议操作：</text>
+      <view class="tips-content">
+        <text wx:for="{{failTips}}" wx:key="*this">• {{item}}</text>
+      </view>
+    </view>
+
+    <button class="btn btn-primary btn-lg btn-block" bindtap="onReupload">
+      重新上传
+    </button>
+  </view>
+</view>

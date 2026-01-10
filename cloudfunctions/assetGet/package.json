@@ -1,0 +1,9 @@
+{
+    "name": "assetGet",
+    "version": "1.0.0",
+    "description": "获取资产临时链接",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "~2.6.3"
+    }
+}

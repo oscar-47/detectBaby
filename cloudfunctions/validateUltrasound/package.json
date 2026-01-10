@@ -1,0 +1,9 @@
+{
+    "name": "validateUltrasound",
+    "version": "1.0.0",
+    "description": "B超图片校验",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "~2.6.3"
+    }
+}

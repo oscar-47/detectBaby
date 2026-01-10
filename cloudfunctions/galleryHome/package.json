@@ -1,0 +1,9 @@
+{
+    "name": "galleryHome",
+    "version": "1.0.0",
+    "description": "首页参考图列表",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "~2.6.3"
+    }
+}

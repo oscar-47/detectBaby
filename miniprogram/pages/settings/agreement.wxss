@@ -1,0 +1,10 @@
+/* pages/settings/agreement.wxss */
+
+.agreement-page {
+  min-height: 100vh;
+  padding: 32rpx;
+  background: #ffffff;
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}

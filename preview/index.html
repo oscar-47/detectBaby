@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>宝宝照AI生成 - 预览</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Home Page -->
+        <div id="page-home" class="page active">
+            <div class="hero-section">
+                <div class="hero-bg"></div>
+                <div class="hero-content">
+                    <div class="hero-title">宝宝照AI生成</div>
+                    <div class="hero-subtitle">上传B超图，AI生成写实宝宝照片</div>
+                    <div class="hero-badge">
+                        <span class="badge badge-primary">写实风格</span>
+                        <span class="badge badge-success">快速出图</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <button class="btn btn-primary btn-lg btn-block generate-btn" onclick="navigateTo('upload')">
+                    <img class="btn-icon" src="../miniprogram/images/icons/camera.png" alt="icon">
+                    <span>立即生成宝宝照</span>
+                </button>
+                <div class="action-tips">
+                    <span class="text-muted font-sm">支持激励广告免费体验或付费¥9.9/次</span>
+                </div>
+            </div>
+
+            <div class="gallery-section">
+                <div class="section-header">
+                    <div class="section-title">参考效果</div>
+                    <div class="section-subtitle text-muted font-sm">看看其他宝宝的写实生成效果</div>
+                </div>
+                
+                <!-- Simulated Waterfall -->
+                <div class="waterfall-container">
+                    <div class="waterfall-column">
+                        <div class="waterfall-item">
+                            <img class="waterfall-image" src="https://picsum.photos/300/400?random=1" alt="example">
+                            <div class="waterfall-tags">
+                                <span class="tag">写实</span>
+                            </div>
+                        </div>
+                         <div class="waterfall-item">
+                            <img class="waterfall-image" src="https://picsum.photos/300/350?random=2" alt="example">
+                            <div class="waterfall-tags">
+                                <span class="tag">可爱</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="waterfall-column">
+                        <div class="waterfall-item">
+                            <img class="waterfall-image" src="https://picsum.photos/300/380?random=3" alt="example">
+                            <div class="waterfall-tags">
+                                <span class="tag">双胞胎</span>
+                            </div>
+                        </div>
+                         <div class="waterfall-item">
+                            <img class="waterfall-image" src="https://picsum.photos/300/420?random=4" alt="example">
+                            <div class="waterfall-tags">
+                                <span class="tag">睡觉</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer -->
+             <div class="footer-section">
+                <div class="footer-links">
+                    <span class="footer-link">用户协议</span>
+                    <span class="footer-divider">|</span>
+                    <span class="footer-link">隐私政策</span>
+                    <span class="footer-divider">|</span>
+                    <span class="footer-link">免责声明</span>
+                </div>
+                <div class="footer-notice text-muted font-xs">
+                    本服务仅供娱乐，非医疗用途
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Page -->
+        <div id="page-upload" class="page">
+             <div class="tips-card card card-elevated">
+                <div class="tips-header">
+                    <img class="tips-icon" src="../miniprogram/images/icons/info.png" alt="info">
+                    <span class="tips-title">上传须知</span>
+                </div>
+                 <div class="tips-list">
+                    <div class="tips-item">
+                        <div class="tips-dot"></div>
+                        <span>请上传清晰的婴儿B超图片</span>
+                    </div>
+                    <div class="tips-item">
+                        <div class="tips-dot warning"></div>
+                        <span>请遮挡或裁剪掉姓名、医院、条码等敏感信息</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="upload-area-container">
+                <div id="upload-area" class="upload-area" onclick="triggerFileUpload()">
+                    <div class="upload-placeholder">
+                        <div class="upload-icon-wrapper">
+                            <img class="upload-icon" src="../miniprogram/images/icons/upload.png" alt="upload">
+                        </div>
+                        <div class="upload-text">点击选择B超图片</div>
+                        <div class="upload-subtext text-muted">从相册选择或拍照</div>
+                    </div>
+                    <div id="preview-container" class="preview-container" style="display: none;">
+                        <img id="upload-preview-img" class="preview-image" src="" alt="preview">
+                    </div>
+                </div>
+                 <input type="file" id="file-input" style="display: none;" onchange="handleFileSelect(event)">
+            </div>
+
+            <div class="bottom-action">
+                <button id="upload-btn" class="btn btn-primary btn-lg btn-block btn-disabled" onclick="startValidation()" disabled>
+                    <span id="upload-btn-text">开始校验</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Validate Page -->
+        <div id="page-validate" class="page">
+            <div id="validating-view" class="validate-content">
+                <div class="validate-animation">
+                     <div class="scan-container">
+                        <img id="scan-img" class="scan-image" src="" alt="scan">
+                        <div class="scan-line"></div>
+                    </div>
+                </div>
+                <div class="validate-info">
+                    <div class="validate-title">正在校验B超图片</div>
+                    <div class="validate-steps">
+                        <div id="val-step-1" class="step"><span>图片格式检测</span></div>
+                        <div id="val-step-2" class="step"><span>B超特征识别</span></div>
+                        <div id="val-step-3" class="step"><span>敏感信息检测</span></div>
+                        <div id="val-step-4" class="step"><span>清晰度评估</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="validation-success-view" class="result-content success" style="display: none;">
+                <div class="result-icon-wrapper success-bg">
+                    <img class="result-icon" src="../miniprogram/images/icons/check-success.png" alt="success">
+                </div>
+                <div class="result-title">校验通过</div>
+                 <div class="result-subtitle text-muted">您的B超图片符合要求</div>
+                 <button class="btn btn-primary btn-lg btn-block" onclick="navigateTo('unlock')">
+                    继续，选择解锁方式
+                </button>
+            </div>
+        </div>
+
+        <!-- Unlock Page -->
+        <div id="page-unlock" class="page">
+            <div class="header-section">
+                <div class="action-badge gen">
+                     <img src="../miniprogram/images/icons/magic.png" alt="magic">
+                    <span>生成宝宝照</span>
+                </div>
+                <div class="header-title">选择解锁方式</div>
+            </div>
+
+             <div class="unlock-options">
+                 <!-- Ad Option -->
+                <div id="unlock-ad" class="unlock-card ad-card" onclick="selectUnlockMethod('ad')">
+                    <div class="card-header">
+                        <div class="card-icon ad-icon"><img src="../miniprogram/images/icons/play-video.png"></div>
+                        <div class="card-badge free">免费</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">观看激励视频</div>
+                        <div class="card-desc text-muted">观看1次广告即可免费体验</div>
+                    </div>
+                     <div class="card-radio">
+                         <div class="radio-circle"></div>
+                     </div>
+                </div>
+
+                <!-- Pay Option -->
+                 <div id="unlock-pay" class="unlock-card pay-card" onclick="selectUnlockMethod('pay')">
+                     <div class="card-header">
+                        <div class="card-icon pay-icon"><img src="../miniprogram/images/icons/crown.png"></div>
+                        <div class="card-badge premium">推荐</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">付费解锁 <span class="price">¥9.9</span></div>
+                         <div class="card-desc text-muted">包含原图下载权限</div>
+                    </div>
+                    <div class="card-radio">
+                         <div class="radio-circle"></div>
+                     </div>
+                 </div>
+            </div>
+
+             <div class="bottom-action">
+                <button id="unlock-btn" class="btn btn-lg btn-block btn-disabled" onclick="confirmUnlock()" disabled>
+                    请选择解锁方式
+                </button>
+            </div>
+        </div>
+
+         <!-- Job Page -->
+        <div id="page-job" class="page">
+             <div class="job-content generating">
+                 <div class="generate-animation">
+                     <div class="baby-container">
+                         <div class="glow-ring"></div>
+                         <div class="baby-icon-wrapper">
+                             <img class="baby-icon" src="../miniprogram/images/icons/baby-face.png" alt="baby">
+                         </div>
+                     </div>
+                 </div>
+                 <div class="generate-info">
+                     <div class="generate-title">正在生成宝宝照...</div>
+                      <div class="progress-section">
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div id="progress-text" class="progress-text">0%</div>
+                    </div>
+                 </div>
+             </div>
+        </div>
+
+         <!-- Result Page -->
+        <div id="page-result" class="page">
+             <div class="success-banner animate-fadeIn">
+                <img class="banner-icon" src="../miniprogram/images/icons/sparkle.png">
+                <span>生成完成</span>
+             </div>
+             
+             <div class="image-section animate-fadeIn">
+                <div class="image-container">
+                    <img id="result-img" class="result-image" src="" alt="Result">
+                </div>
+            </div>
+
+             <div class="action-section animate-fadeIn">
+                  <div class="action-card" onclick="alert('假装保存到相册了')">
+                      <div class="action-icon save-icon"><img src="../miniprogram/images/icons/download.png"></div>
+                      <div class="action-content">
+                          <div class="action-title">保存到相册</div>
+                      </div>
+                  </div>
+                   <div class="action-card" onclick="alert('假装下载原图了')">
+                      <div class="action-icon original-icon"><img src="../miniprogram/images/icons/hd.png"></div>
+                      <div class="action-content">
+                          <div class="action-title">下载原图</div>
+                      </div>
+                  </div>
+             </div>
+
+              <div class="regenerate-section animate-fadeIn">
+                 <button class="btn btn-secondary btn-lg btn-block" onclick="navigateTo('home')">
+                     <span>返回首页</span>
+                 </button>
+             </div>
+        </div>
+    </div>
+    
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab-item active" onclick="navigateTo('home')">
+            <img class="tab-icon" src="../miniprogram/images/tab/home-active.png">
+            <span>首页</span>
+        </div>
+        <div class="tab-item" onclick="alert('历史记录开发中')">
+             <img class="tab-icon" src="../miniprogram/images/tab/history.png">
+            <span>历史</span>
+        </div>
+         <div class="tab-item" onclick="alert('设置开发中')">
+             <img class="tab-icon" src="../miniprogram/images/tab/settings.png">
+            <span>设置</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

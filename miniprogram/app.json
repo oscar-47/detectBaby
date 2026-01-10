@@ -1,0 +1,49 @@
+{
+    "pages": [
+        "pages/home/home",
+        "pages/upload/upload",
+        "pages/validate/validate",
+        "pages/unlock/unlock",
+        "pages/job/job",
+        "pages/result/result",
+        "pages/history/history",
+        "pages/settings/settings",
+        "pages/settings/agreement"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#667eea",
+        "navigationBarTitleText": "宝宝照AI生成",
+        "navigationBarTextStyle": "white",
+        "backgroundColor": "#f5f7fa"
+    },
+    "tabBar": {
+        "color": "#999999",
+        "selectedColor": "#667eea",
+        "backgroundColor": "#ffffff",
+        "borderStyle": "black",
+        "list": [
+            {
+                "pagePath": "pages/home/home",
+                "text": "首页",
+                "iconPath": "images/tab/home.png",
+                "selectedIconPath": "images/tab/home-active.png"
+            },
+            {
+                "pagePath": "pages/history/history",
+                "text": "历史",
+                "iconPath": "images/tab/history.png",
+                "selectedIconPath": "images/tab/history-active.png"
+            },
+            {
+                "pagePath": "pages/settings/settings",
+                "text": "设置",
+                "iconPath": "images/tab/settings.png",
+                "selectedIconPath": "images/tab/settings-active.png"
+            }
+        ]
+    },
+    "sitemapLocation": "sitemap.json",
+    "style": "v2",
+    "lazyCodeLoading": "requiredComponents"
+}
