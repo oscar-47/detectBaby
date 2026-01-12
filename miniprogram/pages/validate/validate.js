@@ -12,6 +12,9 @@ Page({
             ultrasound: 0,
             clarity: 0
         },
+        // 预计算百分比，避免在 WXML 中调用方法
+        ultrasoundPercent: 0,
+        clarityPercent: 0,
         reasonCodes: [],
         failMessage: '',
         failTips: [],
@@ -89,9 +92,14 @@ Page({
 
             setTimeout(() => {
                 if (data.verdict === 'pass') {
+                    const scores = data.scores || { ultrasound: 0.95, clarity: 0.88 };
+                    const ultrasoundPercent = Math.round((scores.ultrasound || 0) * 100);
+                    const clarityPercent = Math.round((scores.clarity || 0) * 100);
                     that.setData({
                         status: 'pass',
-                        scores: data.scores || { ultrasound: 0.95, clarity: 0.88 }
+                        scores: scores,
+                        ultrasoundPercent: ultrasoundPercent,
+                        clarityPercent: clarityPercent
                     });
                 } else {
                     that.handleValidationFail(data);

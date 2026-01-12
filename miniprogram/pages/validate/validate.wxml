@@ -60,16 +60,16 @@
       <view class="score-item">
         <text class="score-label">B超识别</text>
         <view class="score-bar">
-          <view class="score-fill" style="width: {{scores.ultrasound * 100}}%"></view>
+          <view class="score-fill" style="width: {{ultrasoundPercent}}%"></view>
         </view>
-        <text class="score-value">{{(scores.ultrasound * 100).toFixed(0)}}%</text>
+        <text class="score-value">{{ultrasoundPercent}}%</text>
       </view>
       <view class="score-item">
         <text class="score-label">清晰度</text>
         <view class="score-bar">
-          <view class="score-fill" style="width: {{scores.clarity * 100}}%"></view>
+          <view class="score-fill" style="width: {{clarityPercent}}%"></view>
         </view>
-        <text class="score-value">{{(scores.clarity * 100).toFixed(0)}}%</text>
+        <text class="score-value">{{clarityPercent}}%</text>
       </view>
     </view>
 
