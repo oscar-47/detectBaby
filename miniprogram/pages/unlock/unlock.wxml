@@ -12,7 +12,7 @@
 
   <!-- 解锁选项 -->
   <view class="unlock-options">
-    <!-- 激励广告选项 -->
+    <!-- 激励广告选项（暂时注释，后续再完善广告位）
     <view class="unlock-card ad-card {{selectedMethod === 'ad' ? 'selected' : ''}}" 
           bindtap="onSelectMethod" 
           data-method="ad">
@@ -42,6 +42,7 @@
         </view>
       </view>
     </view>
+    -->
 
     <!-- 付费选项 -->
     <view class="unlock-card pay-card {{selectedMethod === 'pay' ? 'selected' : ''}}" 
@@ -87,7 +88,7 @@
     <view class="compare-table">
       <view class="compare-row header">
         <view class="compare-cell label"></view>
-        <view class="compare-cell">广告解锁</view>
+        <view class="compare-cell">广告解锁(将上线)</view>
         <view class="compare-cell highlight">付费解锁</view>
       </view>
       <view class="compare-row">
