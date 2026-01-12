@@ -141,7 +141,7 @@ gallery_items: enabled+sort
 
 ## ⚠️ 注意事项
 
-1. **AI生成服务**：当前代码使用模拟生成，实际项目需接入AI Image Provider
+1. **AI生成服务**：已接入七牛图生图API（`cloudfunctions/generationCreate/index.js`），可通过环境变量覆盖API配置
 2. **广告验证**：生产环境应验证广告观看是否完整
 3. **支付安全**：确保支付回调验签正确配置
 4. **隐私合规**：确保隐私政策、用户协议符合法规要求
