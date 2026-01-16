@@ -42,6 +42,10 @@ exports.main = async (event, context) => {
 
         const job = jobResult.data[0];
 
+        // === 推广期免费：直接返回原图 ===
+        return await getOriginalUrl(job_id);
+        // === 推广期结束后恢复以下权限检查逻辑 ===
+        /*
         // 检查原图访问权限
         if (job.original_access === 'included' || job.original_access === 'unlocked') {
             // 有权限，直接返回
@@ -55,6 +59,7 @@ exports.main = async (event, context) => {
                 error: { code: 'ORIGINAL_LOCKED', message: '原图需要解锁' }
             };
         }
+        */
 
         // 验证解锁token
         const sessionResult = await db.collection('unlock_sessions')

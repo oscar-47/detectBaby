@@ -13,12 +13,16 @@ Page({
     onLoad: function (options) {
         const jobId = options.jobId || '';
         const assetId = options.assetId || '';
-        const originalAccess = options.originalAccess || 'locked';
+        // === 推广期免费：原图始终已解锁 ===
+        const originalAccess = 'included'; // options.originalAccess || 'locked';
+        // 保存uploadFileID用于再生成
+        const uploadFileID = decodeURIComponent(options.uploadFileID || '');
 
         this.setData({
             jobId: jobId,
             assetId: assetId,
-            originalAccess: originalAccess
+            originalAccess: originalAccess,
+            uploadFileID: uploadFileID
         });
 
         // 获取展示图临时链接
@@ -133,6 +137,10 @@ Page({
 
     // 下载原图
     onDownloadOriginal: function () {
+        // === 推广期免费：直接下载原图 ===
+        this.downloadOriginal();
+        // === 推广期结束后恢复以下逻辑 ===
+        /*
         if (this.data.originalAccess === 'locked') {
             // 需要解锁
             wx.navigateTo({
@@ -142,6 +150,7 @@ Page({
             // 已解锁，直接下载
             this.downloadOriginal();
         }
+        */
     },
 
     // 执行原图下载
@@ -194,10 +203,16 @@ Page({
 
     // 再生成一张
     onRegenerate: function () {
-        // 返回到解锁页重新生成
+        // === 推广期免费：直接跳转生成页 ===
+        wx.navigateTo({
+            url: `/pages/job/job?uploadFileID=${encodeURIComponent(this.data.uploadFileID || '')}&method=free`
+        });
+        // === 推广期结束后恢复以下逻辑 ===
+        /*
         wx.navigateTo({
             url: `/pages/unlock/unlock?action=GEN&uploadFileID=${encodeURIComponent(this.data.uploadFileID || '')}`
         });
+        */
     },
 
     // 查看历史

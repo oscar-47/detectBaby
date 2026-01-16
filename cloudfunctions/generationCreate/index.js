@@ -9,7 +9,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
 
 const CONFIG = {
-    API_KEY: process.env.QN_IMAGE_API_KEY || 'sk-a30f322a422ec953919452f80d392998c0ea8bb28b719a9265c03ee0659469d9',
+    API_KEY: process.env.QN_IMAGE_API_KEY || 'sk-7581d97b6f995e103eba62bb08da05762eb62c32cfed294e88cc3e082e371ac8',
     API_ENDPOINT: process.env.QN_IMAGE_API_ENDPOINT || 'https://api.qnaigc.com/v1/images/edits',
     MODEL: process.env.QN_IMAGE_MODEL || 'gemini-3.0-pro-image-preview',
     REQUEST_TIMEOUT_MS: 30000,
@@ -106,8 +106,8 @@ exports.main = async (event, context) => {
     const { unlock_token, uploadFileID, style_id, idempotency_key } = event;
 
     try {
-        // 参数校验
-        if (!unlock_token || !uploadFileID) {
+        // 参数校验（推广期：unlock_token为可选）
+        if (!uploadFileID) {
             return {
                 ok: false,
                 error: { code: 'INVALID_PARAMS', message: '缺少必要参数' }
@@ -116,55 +116,52 @@ exports.main = async (event, context) => {
 
         const now = Math.floor(Date.now() / 1000);
 
-        // 验证unlock_token
-        const sessionResult = await db.collection('unlock_sessions')
-            .where({
-                unlock_token: unlock_token,
-                openid: openid,
-                action: 'GEN'
-            })
-            .limit(1)
-            .get();
-
-        if (sessionResult.data.length === 0) {
-            return {
-                ok: false,
-                error: { code: 'INVALID_TOKEN', message: '无效的解锁令牌' }
-            };
-        }
-
-        const session = sessionResult.data[0];
-
-        // 检查token是否过期
-        if (session.token_expires_at < now) {
-            return {
-                ok: false,
-                error: { code: 'TOKEN_EXPIRED', message: '解锁令牌已过期' }
-            };
-        }
-
-        // 检查是否已消费（幂等处理）
-        if (session.status === 'consumed' && session.job_id) {
-            // 返回已创建的任务
-            const existingJob = await db.collection('generation_jobs')
+        // === 推广期免费：跳过unlock_token验证 ===
+        let session = null;
+        if (unlock_token) {
+            // 有token时验证（兼容旧请求）
+            const sessionResult = await db.collection('unlock_sessions')
                 .where({
-                    job_id: session.job_id
+                    unlock_token: unlock_token,
+                    openid: openid,
+                    action: 'GEN'
                 })
                 .limit(1)
                 .get();
 
-            if (existingJob.data.length > 0) {
-                const job = existingJob.data[0];
-                return {
-                    ok: true,
-                    data: {
-                        job_id: job.job_id,
-                        status: job.status,
-                        original_access: job.original_access
+            if (sessionResult.data.length > 0) {
+                session = sessionResult.data[0];
+
+                // 检查token是否过期
+                if (session.token_expires_at < now) {
+                    return {
+                        ok: false,
+                        error: { code: 'TOKEN_EXPIRED', message: '解锁令牌已过期' }
+                    };
+                }
+
+                // 检查是否已消费（幂等处理）
+                if (session.status === 'consumed' && session.job_id) {
+                    const existingJob = await db.collection('generation_jobs')
+                        .where({ job_id: session.job_id })
+                        .limit(1)
+                        .get();
+
+                    if (existingJob.data.length > 0) {
+                        const job = existingJob.data[0];
+                        return {
+                            ok: true,
+                            data: {
+                                job_id: job.job_id,
+                                status: job.status,
+                                original_access: job.original_access
+                            }
+                        };
                     }
-                };
+                }
             }
         }
+        // === 推广期结束后需恢复完整的token验证逻辑 ===
 
         // 验证B超图片已通过校验
         const validation = await db.collection('ultrasound_validations')
@@ -183,11 +180,15 @@ exports.main = async (event, context) => {
             };
         }
 
-        // 确定原图访问权限
+        // === 推广期免费：原图始终已解锁 ===
+        let original_access = 'included';
+        // === 推广期结束后恢复以下逻辑 ===
+        /*
         let original_access = 'locked';
-        if (session.method === 'pay' && session.sku === 'gen_with_original_1') {
+        if (session && session.method === 'pay' && session.sku === 'gen_with_original_1') {
             original_access = 'included';
         }
+        */
 
         // 生成job_id
         const job_id = generateJobId();
@@ -202,10 +203,10 @@ exports.main = async (event, context) => {
             status: 'queued',
             progress: 0,
             original_access: original_access,
-            unlock_id: session.unlock_id,
-            method: session.method,
+            unlock_id: session?.unlock_id || 'FREE_PROMO',
+            method: session?.method || 'free',
             cost: {
-                amount_fen: session.method === 'pay' ? 990 : 0,
+                amount_fen: 0, // 推广期免费
                 currency: 'CNY'
             },
             created_at: now
@@ -215,18 +216,20 @@ exports.main = async (event, context) => {
             data: job
         });
 
-        // 将session标记为已消费
-        await db.collection('unlock_sessions')
-            .where({
-                unlock_token: unlock_token
-            })
-            .update({
-                data: {
-                    status: 'consumed',
-                    job_id: job_id,
-                    consumed_at: now
-                }
-            });
+        // === 推广期免费：session消费可选 ===
+        if (session && unlock_token) {
+            await db.collection('unlock_sessions')
+                .where({
+                    unlock_token: unlock_token
+                })
+                .update({
+                    data: {
+                        status: 'consumed',
+                        job_id: job_id,
+                        consumed_at: now
+                    }
+                });
+        }
 
         // 异步触发生成任务（实际项目中可使用消息队列）
         triggerGeneration(job_id, uploadFileID, style_id);

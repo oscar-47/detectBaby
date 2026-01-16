@@ -152,11 +152,19 @@ Page({
         return tips;
     },
 
-    // 继续到解锁页
+    // 继续到解锁页（推广期免费：直接跳转生成页）
     onContinue: function () {
+        // === 推广期免费：直接跳转生成页，无需解锁 ===
+        wx.navigateTo({
+            url: `/pages/job/job?uploadFileID=${encodeURIComponent(this.data.uploadFileID)}&method=free`
+        });
+        return;
+        // === 推广期结束后删除以上代码恢复原逻辑 ===
+        /*
         wx.navigateTo({
             url: `/pages/unlock/unlock?action=GEN&uploadFileID=${encodeURIComponent(this.data.uploadFileID)}`
         });
+        */
     },
 
     // 重新上传

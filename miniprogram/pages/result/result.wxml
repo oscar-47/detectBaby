@@ -54,7 +54,7 @@
           <view class="badge badge-warning" wx:if="{{originalAccess === 'locked'}}">需解锁</view>
         </view>
         <view class="action-desc text-muted">
-          <text wx:if="{{originalAccess === 'locked'}}">观看广告或付费¥9.9解锁</text>
+          <text wx:if="{{originalAccess === 'locked'}}">推广期免费下载</text>
           <text wx:else>高清无压缩原图</text>
         </view>
       </view>

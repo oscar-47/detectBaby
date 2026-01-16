@@ -167,7 +167,7 @@ Page({
         const viewAsset = assets.find(a => a.kind === 'view');
 
         wx.redirectTo({
-            url: `/pages/result/result?jobId=${this.data.jobId}&assetId=${viewAsset ? viewAsset.asset_id : ''}&originalAccess=${data.original_access || this.data.originalAccess}`
+            url: `/pages/result/result?jobId=${this.data.jobId}&assetId=${viewAsset ? viewAsset.asset_id : ''}&originalAccess=${data.original_access || this.data.originalAccess}&uploadFileID=${encodeURIComponent(this.data.uploadFileID)}`
         });
     },
 
