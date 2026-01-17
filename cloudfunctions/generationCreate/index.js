@@ -103,14 +103,27 @@ CRITICAL REQUIREMENTS - MUST FOLLOW EXACTLY:
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext();
     const openid = wxContext.OPENID;
-    const { unlock_token, uploadFileID, style_id, idempotency_key } = event;
+    const { unlock_token, uploadFileID, upload_file_id, style_id, idempotency_key } = event;
+    const finalUploadFileID = uploadFileID || upload_file_id;
+    const finalUnlockToken = unlock_token || event.unlockToken;
+
+    // 调试日志
+    console.log('云函数接收到的参数:', {
+        event完整对象: event,
+        解析后uploadFileID: uploadFileID,
+        解析后unlock_token: unlock_token,
+        解析后style_id: style_id,
+        uploadFileID类型: typeof uploadFileID,
+        uploadFileID是否为空: !uploadFileID
+    });
 
     try {
-        // 参数校验（推广期：unlock_token为可选）
-        if (!uploadFileID) {
+        // 参数校验
+        if (!finalUploadFileID) {
+            console.error('参数校验失败：uploadFileID 为空');
             return {
                 ok: false,
-                error: { code: 'INVALID_PARAMS', message: '缺少必要参数' }
+                error: { code: 'INVALID_PARAMS', message: '缺少必要参数 (uploadFileID)' }
             };
         }
 
@@ -232,7 +245,7 @@ exports.main = async (event, context) => {
         }
 
         // 异步触发生成任务（实际项目中可使用消息队列）
-        triggerGeneration(job_id, uploadFileID, style_id);
+        triggerGeneration(job_id, finalUploadFileID, style_id);
 
         return {
             ok: true,
@@ -363,20 +376,12 @@ async function uploadGeneratedImage(base64Data, job_id) {
     const buffer = Buffer.from(base64Data, 'base64');
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
     const fileName = `generated_${timestamp}.jpg`;
-    const tempPath = path.join('/tmp', fileName);
-    fs.writeFileSync(tempPath, buffer);
 
     const cloudPath = `${CONFIG.OUTPUT_PREFIX}/${job_id}/${fileName}`;
     const uploadResult = await cloud.uploadFile({
         cloudPath: cloudPath,
-        filePath: tempPath
+        fileContent: buffer
     });
-
-    try {
-        fs.unlinkSync(tempPath);
-    } catch (err) {
-        console.warn('清理临时文件失败:', err);
-    }
 
     return {
         fileID: uploadResult.fileID,

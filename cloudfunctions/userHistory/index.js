@@ -60,6 +60,7 @@ exports.main = async (event, context) => {
             return {
                 job_id: job.job_id,
                 status: job.status,
+                upload_file_id: job.uploadFileID,
                 original_access: job.original_access,
                 style_id: job.style_id,
                 thumbnail_url: thumbnail_url,

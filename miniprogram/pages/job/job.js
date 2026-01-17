@@ -21,27 +21,64 @@ Page({
         const unlockToken = options.unlockToken || '';
         const uploadFileID = decodeURIComponent(options.uploadFileID || '');
         const method = options.method || 'ad';
+        const jobId = options.jobId || '';
 
         this.setData({
             unlockToken: unlockToken,
             uploadFileID: uploadFileID,
-            method: method
+            method: method,
+            jobId: jobId
         });
 
-        // 创建生成任务
-        this.createGeneration();
+        if (jobId) {
+            // 场景 2：已有任务 ID，直接开始轮询
+            this.startProgressSimulation();
+            this.pollJobStatus(jobId);
+        } else if (uploadFileID) {
+            // 场景 1 & 3：有图片 ID，创建新任务
+            this.createGeneration(uploadFileID, unlockToken);
+        } else {
+            // 场景 4：容错处理（如开发环境刷新）
+            this.setData({
+                status: 'failed',
+                errorMessage: '参数丢失，请返回重新上传'
+            });
+        }
     },
 
     // 创建生成任务
-    createGeneration: function () {
+    createGeneration: function (uploadFileID, unlockToken) {
         const that = this;
+
+        // 调试日志
+        console.log('createGeneration 调用参数:', {
+            传入uploadFileID: uploadFileID,
+            传入unlockToken: unlockToken,
+            data中uploadFileID: this.data.uploadFileID,
+            data中unlockToken: this.data.unlockToken,
+            最终uploadFileID: uploadFileID || this.data.uploadFileID,
+            最终unlockToken: unlockToken || this.data.unlockToken
+        });
 
         // 启动进度模拟
         this.startProgressSimulation();
 
+        const finalUploadFileID = uploadFileID || this.data.uploadFileID;
+        const finalUnlockToken = unlockToken || this.data.unlockToken;
+
+        if (!finalUploadFileID) {
+            console.error('错误：uploadFileID 为空！');
+            that.stopProgressSimulation();
+            that.setData({
+                status: 'failed',
+                errorMessage: '图片ID丢失，请返回重新上传'
+            });
+            return;
+        }
+
         app.callCloudFunction('generationCreate', {
-            unlock_token: this.data.unlockToken,
-            uploadFileID: this.data.uploadFileID,
+            unlock_token: finalUnlockToken,
+            uploadFileID: finalUploadFileID,
             style_id: app.globalData.defaultStyleId,
             idempotency_key: app.generateIdempotencyKey()
         }).then(data => {
@@ -51,7 +88,7 @@ Page({
             });
 
             // 开始轮询任务状态
-            that.pollJobStatus();
+            that.pollJobStatus(data.job_id);
         }).catch(err => {
             console.error('创建生成任务失败', err);
             that.stopProgressSimulation();
@@ -63,13 +100,19 @@ Page({
     },
 
     // 轮询任务状态
-    pollJobStatus: function () {
+    pollJobStatus: function (jobId) {
         const that = this;
+        const currentJobId = jobId || this.data.jobId;
 
-        // 使用长轮询
+        if (!currentJobId) {
+            console.error('轮询失败：缺失 jobId');
+            return;
+        }
+
+        // 使用长轮询（缩短等待时间以彻底解决 NETWORK_ERROR）
         app.callCloudFunction('generationGet', {
-            job_id: this.data.jobId,
-            wait_ms: 18000
+            job_id: currentJobId,
+            wait_ms: 5000
         }).then(data => {
             that.updateStepByStatus(data.status);
 
@@ -94,14 +137,14 @@ Page({
             } else {
                 // 继续轮询
                 that.pollTimer = setTimeout(() => {
-                    that.pollJobStatus();
+                    that.pollJobStatus(currentJobId);
                 }, 2000);
             }
         }).catch(err => {
             console.error('查询任务状态失败', err);
             // 继续轮询
             that.pollTimer = setTimeout(() => {
-                that.pollJobStatus();
+                that.pollJobStatus(currentJobId);
             }, 3000);
         });
     },
