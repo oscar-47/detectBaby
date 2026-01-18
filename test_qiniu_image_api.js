@@ -11,7 +11,7 @@ const https = require('https');
 
 // 配置
 const CONFIG = {
-  API_KEY: 'sk-a30f322a422ec953919452f80d392998c0ea8bb28b719a9265c03ee0659469d9',
+  API_KEY: 'sk-7581d97b6f995e103eba62bb08da05762eb62c32cfed294e88cc3e082e371ac8',
   API_ENDPOINT: 'https://api.qnaigc.com/v1/images/edits',
   MODEL: 'gemini-3.0-pro-image-preview',
   INPUT_DIR: './input',

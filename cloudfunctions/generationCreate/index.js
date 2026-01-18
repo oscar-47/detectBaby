@@ -129,7 +129,21 @@ exports.main = async (event, context) => {
 
         const now = Math.floor(Date.now() / 1000);
 
-        // === 推广期免费：跳过unlock_token验证 ===
+        // === 推广期免费限制：每人仅限一次 ===
+        const usageCount = await db.collection('generation_jobs')
+            .where({
+                openid: openid,
+                status: 'succeeded' // 只统计成功的任务
+            })
+            .count();
+
+        if (usageCount.total >= 1) {
+            return {
+                ok: false,
+                error: { code: 'LIMIT_EXCEEDED', message: '只能免费体验一次哦' }
+            };
+        }
+        // ===================================
         let session = null;
         if (unlock_token) {
             // 有token时验证（兼容旧请求）
