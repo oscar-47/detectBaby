@@ -44,7 +44,7 @@
     "swc": false,
     "disableSWC": true
   },
-  "appid": "wx6048417484dc96c3",
+  "appid": "wxb20cba3b572e6cf7",
   "projectname": "detectBaby",
   "libVersion": "3.3.4",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
