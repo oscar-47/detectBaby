@@ -92,6 +92,23 @@ Page({
         }).catch(err => {
             console.error('创建生成任务失败', err);
             that.stopProgressSimulation();
+
+            // 处理使用次数超限
+            if (err.message && err.message.includes('LIMIT_EXCEEDED') || (err.error && err.error.code === 'LIMIT_EXCEEDED')) {
+                wx.showModal({
+                    title: '体验次数已用完',
+                    content: '每个人只能免费体验一次哦，感谢您的支持！',
+                    showCancel: false,
+                    confirmText: '返回首页',
+                    success: () => {
+                        wx.switchTab({
+                            url: '/pages/home/home'
+                        });
+                    }
+                });
+                return;
+            }
+
             that.setData({
                 status: 'failed',
                 errorMessage: err.message || '创建任务失败'
